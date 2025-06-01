@@ -25,6 +25,7 @@
         .radio-label { margin-right: 1rem; margin-bottom: 0.5rem; display: inline-flex; align-items: center; cursor: pointer;}
         .radio-input { margin-right: 0.5rem; accent-color: #ec4899; /* pink-500 */ }
         .info-box { background-color: #fefce8; /* yellow-50 */ border-left: 4px solid #eab308; /* yellow-500 */ padding: 1rem; margin-bottom:1.5rem; font-size: 0.875rem; color: #713f12; /* yellow-800 */}
+        .info-box p { margin-bottom: 0.5rem; }
         .info-box a { color: #854d0e; font-weight: 500; text-decoration: underline;}
         .info-box a:hover { color: #713f12;}
         .info-box ul { padding-left: 1.25rem; list-style-type: disc; margin-top: 0.5rem;}
@@ -341,6 +342,14 @@
                     <span id="copyFeedbackSensitiveLink" class="copy-feedback"></span>
                 </div>
             </div>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-pink-600 mb-3">5. U+알뜰모바일 인터넷 결합 요금제 안내 (고객 발송용)</h3>
+                <textarea id="mvnoInfoLinkScript" class="message-script-area" readonly>U+알뜰모바일 인터넷 결합 요금제 정보: https://www.uplusmvno.com/plan/plan-list</textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('mvnoInfoLinkScript', 'copyFeedbackMvnoLink')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackMvnoLink" class="copy-feedback"></span>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -486,6 +495,7 @@
         const infoScriptEl = document.getElementById('infoScript');
         const completeScriptEl = document.getElementById('completeScript');
         const sensitiveInfoLinkScriptEl = document.getElementById('sensitiveInfoLinkScript');
+        const mvnoInfoLinkScriptEl = document.getElementById('mvnoInfoLinkScript'); // Added for new script
 
 
         function populateSelectWithOptionsGeneric(selectElement, dataObject, defaultKey = "none", nameKey = "name", priceKey = "price") {
