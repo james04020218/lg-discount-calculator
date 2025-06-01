@@ -495,7 +495,11 @@
                 const item = dataObject[key];
                 const option = document.createElement('option');
                 option.value = key;
-                option.textContent = `${item[nameKey]} (월 ${item[priceKey].toLocaleString()}원)`;
+                if ((selectElement.id === 'tvPlan' || selectElement.id === 'additionalTvPlan') && item.channels_info) {
+                     option.textContent = `${item[nameKey]} (${item.channels_info}, 월 ${item[priceKey].toLocaleString()}원)`;
+                } else {
+                     option.textContent = `${item[nameKey]} (월 ${item[priceKey].toLocaleString()}원)`;
+                }
                 option.dataset.price = item[priceKey];
                 if (item.speed_mbps) option.dataset.speed = item.speed_mbps;
                 if (item.type) option.dataset.type = item.type;
@@ -531,7 +535,7 @@
 
             if (internetPlanEl.querySelector(`option[value="${currentInternetPlanKey}"]`)) {
                 internetPlanEl.value = currentInternetPlanKey;
-            } else { // If previous selection is not in new list, set default
+            } else { 
                 internetPlanEl.value = "500M"; 
             }
             
@@ -548,16 +552,18 @@
 
             tvPlanEl.disabled = !isBundle;
             additionalTvPlanEl.disabled = !isBundle;
+            phonePlanEl.disabled = !isBundle; 
 
             if (!isBundle) {
                 tvPlanEl.value = 'none';
                 additionalTvPlanEl.value = 'none';
+                phonePlanEl.value = 'none'; 
             } else {
                 if (tvPlanEl.value === 'none' && lguData.tv_plans['basic_uhd4']) {
                      tvPlanEl.value = 'basic_uhd4';
                 }
             }
-            handleTvPlanChange(); // Update additional TV status based on first TV
+            handleTvPlanChange(); 
         }
         
         function handleTvPlanChange() {
@@ -572,7 +578,7 @@
 
         function updateMobileLineControls() {
             const selectedDiscount = document.querySelector('input[name="discountType"]:checked').value;
-            let mobileCount = 0; // Default to 0
+            let mobileCount = 0; 
             let isMobileDisabled = true;
 
             switch (selectedDiscount) {
@@ -581,11 +587,11 @@
                     isMobileDisabled = true;
                     break;
                 case 'cham_family':
-                    mobileCount = 1; // Default to 1 for 참쉬운가족결합
+                    mobileCount = 1; 
                     isMobileDisabled = false;
                     break;
                 case 'together_bundle':
-                    mobileCount = 1; // Default to 1 for 투게더결합
+                    mobileCount = 1; 
                     isMobileDisabled = false;
                     break;
                 case 'internet_family_all_together':
@@ -593,10 +599,10 @@
                     isMobileDisabled = true;
                     break;
                 case 'mvno_bundle':
-                    mobileCount = 1; // Default to 1 for 알뜰폰결합
+                    mobileCount = 1; 
                     isMobileDisabled = false;
                     break;
-                default: // Should not happen if 'none' is default
+                default: 
                     mobileCount = 0;
                     isMobileDisabled = true;
             }
@@ -615,15 +621,15 @@
 
             tvPlanEl.addEventListener('change', handleTvPlanChange); 
             
-            handleInternetTypeChange(); // Call to set initial internet plans and TV states
-            updateMobileLineControls(); // Set initial mobile line controls based on default discount type
+            handleInternetTypeChange(); 
+            updateMobileLineControls(); 
 
             allDetailSectionsLGU.forEach(section => {
                 if (section.containerEl) {
                     const isSelectedRadio = document.querySelector(`input[name="discountType"][value="${section.radioValue}"]`);
                     const isSelected = isSelectedRadio ? isSelectedRadio.checked : false;
                     let shouldBeVisible = isSelected && section.toggleEl && section.toggleEl.checked;
-                     if (section.radioValue === "none" && isSelected) { // "결합할인 없음"은 상세보기 없음
+                     if (section.radioValue === "none" && isSelected) { 
                         shouldBeVisible = false;
                     }
                     section.containerEl.classList.toggle('hidden', !shouldBeVisible);
@@ -800,7 +806,7 @@
             const internetKey = internetPlanEl.value; 
             const tvKey = isBundleInternetType ? tvPlanEl.value : 'none'; 
             const additionalTvKey = isBundleInternetType ? additionalTvPlanEl.value : 'none';
-            const phoneKey = phonePlanEl.value;
+            const phoneKey = isBundleInternetType ? phonePlanEl.value : 'none';
             const numMobileLines = parseInt(mobileLinesCountEl.value) || 0;
             const selectedDiscountRadioValue = document.querySelector('input[name="discountType"]:checked').value; 
             const installationTime = document.querySelector('input[name="installationTime"]:checked').value;
@@ -843,12 +849,14 @@
             }
 
             let phoneBase = 0;
-            if (phoneKey !== 'none' && lguData.phone_plans[phoneKey]) {
+            if (isBundleInternetType && phoneKey !== 'none' && lguData.phone_plans[phoneKey]) {
                 phoneBase = lguData.phone_plans[phoneKey].price;
             }
             const finalPhoneComponentCost = phoneBase;
             
             const finalMonthlyDisplayCost = finalInternetComponentCost + finalTvComponentCost + finalAdditionalTvCost + finalPhoneComponentCost;
+            const totalPreDiscountMonthlyFee = internetBasePrice + finalTvComponentCost + finalAdditionalTvCost + finalPhoneComponentCost;
+
 
             totalBaseInternetCostEl.textContent = internetBasePrice.toLocaleString();
             totalInternetDiscountAmountEl.textContent = totalActualInternetDiscount.toLocaleString();
@@ -867,7 +875,7 @@
                 additionalTvCostSummaryContainerEl.classList.add('hidden');
             }
 
-            if (phoneKey !== 'none') {
+            if (isBundleInternetType && phoneKey !== 'none') {
                 phoneCostSummaryContainerEl.classList.remove('hidden');
                 phoneBaseCostDisplayEl.textContent = phoneBase.toLocaleString();
             } else {
@@ -877,7 +885,7 @@
             finalMonthlyCostEl.textContent = finalMonthlyDisplayCost.toLocaleString();
 
             let calculatedInstallationFee = 0;
-            const installKeyToLookup = determineInstallationKey(internetKey !== 'none', isBundleInternetType && tvKey !== 'none', phoneKey !== 'none', isBundleInternetType && additionalTvKey !== 'none');
+            const installKeyToLookup = determineInstallationKey(internetKey !== 'none', isBundleInternetType && tvKey !== 'none', isBundleInternetType && phoneKey !== 'none', isBundleInternetType && additionalTvKey !== 'none');
             if(installKeyToLookup && lguData.installation_fees[installKeyToLookup]){
                 calculatedInstallationFee = lguData.installation_fees[installKeyToLookup][installationTime] || 0;
             }
@@ -885,7 +893,7 @@
             selectedInternetEl.textContent = currentInternetDetails.name;
             selectedTvEl.textContent = (isBundleInternetType && tvKey !== 'none' && lguData.tv_plans[tvKey]) ? lguData.tv_plans[tvKey].name : '미선택';
             selectedAdditionalTvEl.textContent = (isBundleInternetType && additionalTvKey !== 'none' && lguData.additional_tv_options[additionalTvKey]) ? lguData.additional_tv_options[additionalTvKey].name : '미선택';
-            selectedPhoneEl.textContent = phoneKey !== 'none' && lguData.phone_plans[phoneKey] ? lguData.phone_plans[phoneKey].name : '미선택';
+            selectedPhoneEl.textContent = (isBundleInternetType && phoneKey !== 'none' && lguData.phone_plans[phoneKey]) ? lguData.phone_plans[phoneKey].name : '미선택';
             selectedMobileCountEl.textContent = numMobileLines;
             
             const discountTypeDisplayMap = {
@@ -910,17 +918,17 @@
             
             resultSection.classList.remove('hidden');
             messageScriptSectionEl.classList.remove('hidden');
-            generateMessageScriptsLGU();
+            generateMessageScriptsLGU(totalPreDiscountMonthlyFee, selectedDiscountRadioValue === "none"); 
         }
 
-        function generateMessageScriptsLGU() {
+        function generateMessageScriptsLGU(preDiscountFee, noBundleSelected) { 
             const selectedInternetTypeValue = document.querySelector('input[name="internetType"]:checked').value;
             const isBundleInternetType = selectedInternetTypeValue === 'bundle';
 
             const internetKey = internetPlanEl.value;
             const tvKey = isBundleInternetType ? tvPlanEl.value : 'none';
             const additionalTvKey = isBundleInternetType ? additionalTvPlanEl.value : 'none';
-            const phoneKey = phonePlanEl.value;
+            const phoneKey = isBundleInternetType ? phonePlanEl.value : 'none';
 
             const internetPlanInfo = getInternetPlanInfo(internetKey, isBundleInternetType);
             const internetPlanText = internetPlanInfo.name !== "미선택" ? internetPlanInfo.name : "인터넷 미선택";
@@ -932,15 +940,15 @@
             
             const additionalTvName = (isBundleInternetType && additionalTvKey !== 'none' && lguData.additional_tv_options[additionalTvKey]) ? lguData.additional_tv_options[additionalTvKey].name : "";
             const additionalTvTextForMsg = (isBundleInternetType && additionalTvKey !== 'none') ? `\n▶️ (추가) ${additionalTvName}` : "";
-            const phonePlanTextForMsg = (phoneKey !== 'none' && lguData.phone_plans[phoneKey]) ? `\n▶️ ${lguData.phone_plans[phoneKey].name}` : "";
+            const phonePlanTextForMsg = (isBundleInternetType && phoneKey !== 'none' && lguData.phone_plans[phoneKey]) ? `\n▶️ ${lguData.phone_plans[phoneKey].name}` : "";
 
-            const monthlyFee = finalMonthlyCostEl.textContent;
+            const finalCalculatedMonthlyFee = finalMonthlyCostEl.textContent; 
             const giftAmount = giftCashEl.textContent;
             const installFee = installationCostResultEl.textContent;
             const installTime = document.querySelector('input[name="installationTime"]:checked').value;
             
             let installFeeForWeekendMessage = "";
-            const currentInstallKey = determineInstallationKey(internetKey !== 'none', isBundleInternetType && tvKey !== 'none', phoneKey !== 'none', isBundleInternetType && additionalTvKey !== 'none');
+            const currentInstallKey = determineInstallationKey(internetKey !== 'none', isBundleInternetType && tvKey !== 'none', isBundleInternetType && phoneKey !== 'none', isBundleInternetType && additionalTvKey !== 'none');
             if (currentInstallKey && lguData.installation_fees[currentInstallKey] && installTime === 'weekend') {
                  installFeeForWeekendMessage = (lguData.installation_fees[currentInstallKey].weekend || 0).toLocaleString();
             }
@@ -948,10 +956,10 @@
             let productDescriptionMemo = internetPlanText;
             if (isBundleInternetType && tvKey !== 'none') productDescriptionMemo += ` + ${firstTvText}`;
             if (isBundleInternetType && additionalTvKey !== 'none') productDescriptionMemo += ` + (추가)${additionalTvName.split('(')[0].trim()}`;
-            if (phoneKey !== 'none' && lguData.phone_plans[phoneKey]) productDescriptionMemo += ` + ${lguData.phone_plans[phoneKey].name}`;
+            if (isBundleInternetType && phoneKey !== 'none' && lguData.phone_plans[phoneKey]) productDescriptionMemo += ` + ${lguData.phone_plans[phoneKey].name}`;
 
             memoScriptEl.value = `1. 상품 : ${productDescriptionMemo}
-2. 요금 : ${monthlyFee}원
+2. 요금 : ${preDiscountFee.toLocaleString()}원 (할인 전) / ${finalCalculatedMonthlyFee}원 (최종 예상)
 3. 사은품 : 현금 ${giftAmount}원
 4. 설치비 : ${installFee}원
 5. 기타 : 이사 여부 [  ] / 희망설치일자 [    년   월   일]`;
@@ -961,11 +969,13 @@
             productDescriptionInfo += additionalTvTextForMsg;
             productDescriptionInfo += phonePlanTextForMsg;
 
+            const bundleStatusText = noBundleSelected ? "결합(X)" : "결합(O)";
+
             infoScriptEl.value = `[미소] U+ 상품 & 사은품 요약 안내
 안녕하세요, 미소 U+ 입니다.
 고객님께서 오늘 상담 받으신 상품 안내드립니다.
 ${productDescriptionInfo}
-▶️ 월 ${monthlyFee}원 (결합 O, 3년 약정)
+▶️ 월 ${finalCalculatedMonthlyFee}원 (${bundleStatusText}, 3년 약정)
 ▶️ 현금 사은품 ${giftAmount}원
 * 혜택은 실시간으로 바뀔 수 있다는 점 안내드립니다.
 미소 드림.`;
@@ -987,10 +997,10 @@ ${productDescriptionInfo}
 ⚠️ 3년 이내 해지 시 통신사 본사에 위약금 (할인 반환금) 및 면제된 설치비/장비임대료 등이 반환될 수 있어요.
 ✅ 가입 상품 안내
 ${productDescriptionComplete}
-▶️ 월 ${monthlyFee}원 (결합 O, 3년 약정)
+▶️ 월 ${finalCalculatedMonthlyFee}원 (${bundleStatusText}, 3년 약정)
 ▶️ 설치비 ${installFee}원 첫 달 합산 청구 ${installTime === 'weekday' || !installFeeForWeekendMessage || installFeeForWeekendMessage === "0" ? '' : `(주말/야간 설치 시 ${installFeeForWeekendMessage}원)`}
 ▶️ 현금 사은품 ${giftAmount}원
-✅사은품은 설치 후 평일 기준 익주 금요일까지 지급됩니다. (설치 후 연락 필수)
+✅사은품은 설치 후 7일 이내 자동으로 지급되나 평일기준 5시 이전 개통 받았다고 문자 주시면 당일입금 도움드리겠습니다.
 ${installTime !== 'weekday' && installFeeForWeekendMessage && installFeeForWeekendMessage !== "0" ? `-> 주말/야간 설치비는 ${installFeeForWeekendMessage}원 이십니다.` : ''}
 미소 드림.`;
 
