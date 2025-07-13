@@ -1183,8 +1183,7 @@
             if (tvKey !== 'none') wiredProductLines.push(`▶️ ${lguData.tv_plans[tvKey].name}`);
             if (additionalTvKey !== 'none') wiredProductLines.push(`▶️ (추가) ${lguData.additional_tv_options[additionalTvKey].name}`);
             if (phoneKey !== 'none') wiredProductLines.push(`▶️ ${lguData.phone_plans[phoneKey].name}`);
-            // Note: WiFi info is considered included in the internet plan name.
-        
+            
             const mobileProductLines = [];
             if (numMobileLines > 0) {
                 const planInputs = Array.from(document.querySelectorAll('.mobile-line-item')).map(item => ({
@@ -1253,7 +1252,7 @@
             completeScriptEl.value = `[미소] U+ 가입 완료 안내\n안녕하세요, 고객님. 미소 U+입니다.\n✅ 계약이 완료되었어요, 아래 내용은 계약서와 동일한 효력이 있으니 꼼꼼히 읽어주세요.\n⚠️ 3년 약정이며, 아래와 같은 상황에 해당하면 받으셨던 사은품은 환수 됩니다.\n① 1년 이내 해지/정지/명의변경\n② 요금 미납 및 사용정지\n③ 요금제 하향 (상향 시에는 환수 되지 않습니다!)\n④ 개통 1개월 이내 결제수단 지로청구서로 변경\n⚠️ 신규 가입 후 기존에 사용하시던 타사 인터넷/TV는 꼭 직접 해지 해주세요. 자동해지되지 않으며 이럴 경우 요금이 이중 부과되어요.\n⚠️ 3년 이내 해지 시 통신사 본사에 위약금 (할인 반환금) 및 면제된 설치비/장비임대료 등이 반환될 수 있어요.\n✅ 가입 상품 안내\n${completeProductDescription}${completeDiscountLine}\n▶️ 월 ${finalWiredCost}원 (유선상품, 3년 약정)\n▶️ 설치비 ${installFee}원 첫 달 합산 청구 ${installTime === 'weekday' || !installFeeForWeekendMessage || installFeeForWeekendMessage === "0" ? '' : `(주말/야간 설치 시 ${installFeeForWeekendMessage}원)`}\n▶️ 현금 사은품 ${giftAmount}원\n✅사은품은 설치 후 평일 기준 익주 금요일까지 지급됩니다. (설치 후 연락 필수)\n${installTime !== 'weekday' && installFeeForWeekendMessage && installFeeForWeekendMessage !== "0" ? `-> 주말/야간 설치비는 ${installFeeForWeekendMessage}원 이십니다.` : ''}\n미소 드림.`;
         
             // --- 4. Sensitive Info Script ---
-            sensitiveInfoLinkScriptEl.value = `[LG] 아래 링크에 고객님의 민감정보를 입력하시면 LG로 고객님의 민감정보가 직접 전송후 접수 됩니다.\n입력후 접수 완료 라고 문자 주시면 담당 상담원이 접수 확인후 필수 안내사항 안내 드리겠습니다.`;
+            sensitiveInfoLinkScriptEl.value = `[LG] 아래 링크에 고객님의 민감정보를 입력하시면 LG로 고객님의 민감정보가 직접 전송후 접수 됩니다.\n\nhttps://miso.kr/booking/forms/secure-details?querystring=고객님 전화번호\n\n입력후 접수 완료 라고 문자 주시면 담당 상담원이 접수 확인후 필수 안내사항 안내 드리겠습니다.`;
         
             // --- 5. MVNO Info Script ---
             mvnoInfoScriptEl.value = 'U+알뜰모바일 인터넷 결합 요금제 정보: https://www.uplusmvno.com/plan/plan-list';
