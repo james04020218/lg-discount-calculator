@@ -452,6 +452,7 @@
     <script>
         // Embedded JavaScript
         const lguMobilePlans = [
+            { "plan_name": "요금제 선택없음", "network_type": "None", "price": 0, "url": "#" },
             { "plan_name": "5G 시그니처", "network_type": "5G", "price": 130000, "url": "https://www.lguplus.com/mobile/plan/mplan/5g-all/5g-unlimited/Z202205253" },
             { "plan_name": "5G 프리미어 슈퍼", "network_type": "5G", "price": 115000, "url": "https://www.lguplus.com/mobile/plan/mplan/5g-all/5g-unlimited/Z202205251" },
             { "plan_name": "5G 프리미어 플러스", "network_type": "5G", "price": 105000, "url": "https://www.lguplus.com/mobile/plan/mplan/5g-all/5g-unlimited/Z202205252" },
@@ -715,16 +716,19 @@
                 lguMobilePlans.forEach(plan => {
                     const option = document.createElement('option');
                     option.value = plan.price;
-                    option.textContent = `${plan.plan_name} (${plan.price.toLocaleString()}원)`;
+                    option.textContent = `${plan.plan_name} (${plan.price === 0 ? '선택안함' : plan.price.toLocaleString() + '원'})`;
                     option.dataset.planName = plan.plan_name;
                     option.dataset.url = plan.url;
-                    if (selectedDiscount === 'together_bundle' && plan.price < 85000) {
+                    if (selectedDiscount === 'together_bundle' && plan.price < 85000 && plan.price !== 0) {
                         option.disabled = true;
                     }
                     select.appendChild(option);
                 });
-                if (selectedDiscount === 'cham_family') select.value = "33000";
-                if (selectedDiscount === 'together_bundle') select.value = "85000";
+
+                if (selectedDiscount === 'cham_family' || selectedDiscount === 'together_bundle' || selectedDiscount === 'mvno_bundle') {
+                    select.value = "0"; // Default to "요금제 선택없음"
+                }
+
                 const checkboxLabel = document.createElement('label');
                 checkboxLabel.className = 'flex items-center mt-2 text-sm text-slate-600';
                 const checkbox = document.createElement('input');
@@ -1185,32 +1189,35 @@
             if (phoneKey !== 'none') wiredProductLines.push(`▶️ ${lguData.phone_plans[phoneKey].name}`);
             
             const mobileProductLines = [];
-            if (numMobileLines > 0) {
-                const planInputs = Array.from(document.querySelectorAll('.mobile-line-item')).map(item => ({
-                    selector: item.querySelector('.mobile-plan-selector'),
-                    price: parseInt(item.querySelector('.mobile-plan-selector').value),
-                    selectiveDiscountChecked: item.querySelector('.selective-discount-cb').checked
-                }));
-                const mobileDiscounts = getMobileDiscount(selectedDiscountRadioValue, numMobileLines, planInputs);
+            const planInputs = Array.from(document.querySelectorAll('.mobile-line-item')).map(item => ({
+                selector: item.querySelector('.mobile-plan-selector'),
+                price: parseInt(item.querySelector('.mobile-plan-selector').value),
+                selectiveDiscountChecked: item.querySelector('.selective-discount-cb').checked
+            }));
+
+            const actualPlanInputs = planInputs.filter(input => input.price > 0);
+
+            if (actualPlanInputs.length > 0) {
+                const mobileDiscounts = getMobileDiscount(selectedDiscountRadioValue, actualPlanInputs.length, actualPlanInputs);
                 const totalBundleMobileDiscount = mobileDiscounts.totalBundleDiscount;
         
-                planInputs.forEach(input => {
+                actualPlanInputs.forEach(input => {
                     const selectedOption = input.selector.options[input.selector.selectedIndex];
                     const planName = selectedOption.dataset.planName;
                     const planPrice = input.price;
                     const planUrl = selectedOption.dataset.url || '#';
                     
                     let lineBundleDiscount = 0;
-                    if (numMobileLines >= 2) {
+                    if (actualPlanInputs.length >= 2) {
                         if (selectedDiscountRadioValue === 'cham_family') {
-                            const rule = lguData.mobile_discounts.cham_family.find(r => r.lines.includes(numMobileLines)) || lguData.mobile_discounts.cham_family[lguData.mobile_discounts.cham_family.length - 1];
+                            const rule = lguData.mobile_discounts.cham_family.find(r => r.lines.includes(actualPlanInputs.length)) || lguData.mobile_discounts.cham_family[lguData.mobile_discounts.cham_family.length - 1];
                             if(rule) {
                                 if (planPrice >= 69000) lineBundleDiscount = rule.tiers.over_69k;
                                 else if (planPrice >= 47000) lineBundleDiscount = rule.tiers.under_69k;
                                 else lineBundleDiscount = rule.tiers.under_47k;
                             }
                         } else if (selectedDiscountRadioValue === 'together_bundle' && totalBundleMobileDiscount > 0) {
-                            lineBundleDiscount = totalBundleMobileDiscount / numMobileLines;
+                            lineBundleDiscount = totalBundleMobileDiscount / actualPlanInputs.length;
                         }
                     }
         
