@@ -1655,7 +1655,7 @@ ${results500M.productDescriptionForScript.trim()}
         
         // --- NEW AI SCRIPT FUNCTION ---
         async function generateAiScript() {
-            const apiKey = "AIzaSyA7WWNoRfEkKfhg5Y6u85ahXPhzUKKzP34"; // API 키를 코드 내에 직접 정의합니다.
+            const apiKey = "AIzaSyA7WWNoRfEkKfhg5Y6u85ahXPhzUKKzP34"; // If you want to use models other than gemini-2.5-flash-preview-05-20 or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
             const consultationText = consultationInputEl.value.trim();
 
             if (!consultationText) {
@@ -1668,20 +1668,29 @@ ${results500M.productDescriptionForScript.trim()}
             
             const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
 
-            const systemPrompt = `You are a top-tier LG U+ internet sales consultant with exceptional writing skills and a deep understanding of customer psychology. Your primary goal is to write a persuasive text message that overcomes a customer's hesitation, specifically when they say "I'll think about it," and successfully encourages them to sign up.`;
-            const userPrompt = `Based on the following customer consultation transcript, please write a warm, persuasive, and sincere text message to send to the customer.
+            const systemPrompt = `당신은 뛰어난 작문 실력과 고객 심리에 대한 깊은 이해를 갖춘 최고의 LG U+ 인터넷 영업 컨설턴트입니다. 당신의 주된 목표는 고객이 "생각 좀 해볼게요"라고 말하며 망설일 때, 그 망설임을 극복하고 성공적으로 가입을 유도하는 설득력 있는 문자 메시지를 작성하는 것입니다.`;
+            const userPrompt = `아래 고객 상담 내용을 바탕으로, 고객에게 보낼 따뜻하고 설득력 있으며 진심이 담긴 문자 메시지를 작성해 주세요. 이 메시지의 최종 목표는 고객이 다시 상담을 요청하게 하여 계약을 성사시키는 것입니다.
 
-**Analysis and Writing Guidelines:**
-1.  **Identify the Core Hesitation:** Read between the lines. Is the customer worried about the price, the long contract, the installation hassle, or something else? Your message must address this specific point of hesitation.
-2.  **Pinpoint the Key Need:** What problem is the customer trying to solve with new internet? (e.g., "My current internet is too slow for gaming," "My family complains about buffering.") Your message must emphasize how LG U+ is the perfect solution to this exact problem.
-3.  **Start with Empathy:** Begin by acknowledging their position and thanking them for their time.
-4.  **Provide a Gentle Counter-Argument:** Directly but gently address their hesitation by reframing it as a benefit. For example, if they're worried about the contract, you could highlight the massive TCO savings. If it's about price, reiterate the final discounted price and the value they're getting.
-5.  **Reiterate the Solution:** Briefly remind them how switching will solve their primary pain point (e.g., "...and you'll finally be free from that frustrating buffering during family movie nights. ✨").
-6.  **Human-like Tone:** Write with sincerity and care. Avoid corporate jargon. Use natural language.
-7.  **Use Emojis Sparingly:** Add 1-2 tasteful emojis (like 😊, ✅, ✨, 👍) to make the message feel friendly and approachable.
-8.  **Soft Call to Action:** End with a no-pressure closing. For example, "Let me know if any other questions pop up. I'm here to help! 😊"
+**작성 지침:**
+1.  **핵심 망설임 파악:** 고객이 가격, 긴 약정, 설치의 번거로움 등 무엇을 걱정하는지 파악하세요. 메시지는 이 특정 망설임을 해결해야 합니다.
+2.  **핵심 니즈 강조:** 고객이 새로운 인터넷으로 해결하려는 문제가 무엇인지(예: "게임하기에 인터넷이 너무 느려요", "가족들이 버퍼링 때문에 불평해요") 강조하세요. LG U+가 이 문제에 대한 완벽한 해결책임을 강조해야 합니다.
+3.  **공감으로 시작:** 고객의 입장을 이해하고 시간에 대해 감사하는 말로 시작하세요.
+4.  **부드러운 반론 제시:** 망설임을 혜택으로 재구성하여 부드럽게 해결하세요.
+5.  **해결책 재확인:** 인터넷 변경이 고객의 핵심 문제를 어떻게 해결해 줄지 상기시켜주세요 (예: "...이제 가족 영화의 밤에 답답한 버퍼링에서 벗어날 수 있습니다. ✨").
+6.  **인간적인 어조:** 진심을 담아 작성하고, 딱딱한 기업 용어는 피하세요.
+7.  **이모티콘 사용:** 1~2개의 적절한 이모티콘(😊, ✅, ✨, 👍)을 사용하여 친근한 느낌을 주세요.
+8.  **부담 없는 행동 유도:** 압박감 없는 마무리로 끝내세요 (예: "다른 궁금한 점 있으시면 언제든 편하게 연락 주세요! 😊").
 
-**Customer Consultation Transcript:**
+**9. 상황별 핵심 설득 전략 (매우 중요):**
+    - 고객이 **사은품이나 초기 설치비**에 불만이 있는 경우: '후기/지인 추천 이벤트(최대 7만원)' 참여로 총 혜택이 훨씬 커진다는 점을 언급하며, 초기 비용 부담을 상쇄할 수 있음을 자연스럽게 안내하세요.
+    - 고객이 **월 청구 요금** 자체에 부담을 느끼는 경우: 계산기에 있는 '제휴카드 할인' 기능을 활용했을 때의 최종 할인 금액을 직접 언급하며, "월 OOO원으로 통신비를 획기적으로 낮출 수 있다"는 점을 적극적으로 어필하세요.
+    - 고객이 **3년 약정 기간**에 대한 거부감이 크고 단기 약정을 원하는 경우: 계산기의 '1년 vs 3년 약정 TCO 비교' 데이터를 인용하여, "1년만 사용하고 해지하시더라도 3년 약정이 총비용 면에서 OOO원 더 이득"이라는 점을 구체적인 수치로 제시하며 논리적으로 설득하세요.
+
+**10. 절대 준수 사항:**
+    - "방금 통화했던"과 같이 시점을 특정하는 멘트는 사용하지 마세요.
+    - 발신자는 항상 "미소 인터넷 김홍식 팀장"으로 고정해 주세요.
+
+**고객 상담 내용:**
 ---
 ${consultationText}
 ---
