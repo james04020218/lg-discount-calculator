@@ -1577,9 +1577,18 @@ ${results500M.productDescriptionForScript.trim()}
             }
 
             const eventDetails = `\n\n[✨추가 혜택 이벤트 상세 안내✨]
-1. 후기 이벤트 (최대 3만원): 인터넷 설치 후 후기를 작성해주시면 혜택을 드려요.
-2. 지인 추천 이벤트 (최대 4만원): 고객님 추천으로 지인이 가입하면 두 분 모두에게 혜택을 드려요.
-*자세한 참여 방법은 가입 완료 후 별도로 안내해 드립니다.`;
+혜택 1. 생생한 후기 남기고 현금 받기! (최대 4만원)
+블로그, 인스타그램 등 개인 SNS에 미소 인터넷 설치 후기를 남겨주세요.
+정성스러운 후기를 작성해주신 모든 분께 현금 사은품을 드립니다!
+(사진과 함께 꼼꼼한 후기를 남겨주시면 당첨 확률 UP!)
+
+혜택 2. 좋은 건 함께! 지인 추천하고 현금 받기! (최대 3만원)
+주변에 인터넷 가입을 고민하는 친구나 가족이 있다면 미소를 추천해주세요!
+지인분이 고객님 추천으로 가입 및 설치를 완료하시면, 두 분 모두에게 현금 사은품을 드립니다.
+
+▶️ 참여 방법
+1. SNS에 후기를 작성하신 후, 해당 링크를 저희에게 문자로 보내주세요.
+2. 지인 추천 시, 지인분께서 상담 과정에서 'OOO님 추천'이라고 꼭 말씀해주셔야 합니다.`;
 
             infoScriptText += `\n\n${howToCheckUsageTable}${eventDetails}\n\n* 혜택은 실시간으로 바뀔 수 있다는 점 안내드립니다.\n* 3년 약정 기준\n미소 드림.`;
             
@@ -1655,7 +1664,7 @@ ${results500M.productDescriptionForScript.trim()}
         
         // --- NEW AI SCRIPT FUNCTION ---
         async function generateAiScript() {
-            const apiKey = "AIzaSyA7WWNoRfEkKfhg5Y6u85ahXPhzUKKzP34"; // If you want to use models other than gemini-2.5-flash-preview-05-20 or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+            const apiKey = ""; // If you want to use models other than gemini-2.5-flash-preview-05-20 or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
             const consultationText = consultationInputEl.value.trim();
 
             if (!consultationText) {
@@ -1666,7 +1675,7 @@ ${results500M.productDescriptionForScript.trim()}
             generateAiScriptBtnEl.disabled = true;
             aiScriptOutputEl.value = "AI가 고객님의 마음을 얻을 문자를 작성 중입니다... 잠시만 기다려주세요. ✨";
             
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`;
 
             const systemPrompt = `당신은 뛰어난 작문 실력과 고객 심리에 대한 깊은 이해를 갖춘 최고의 LG U+ 인터넷 영업 컨설턴트입니다. 당신의 주된 목표는 고객이 "생각 좀 해볼게요"라고 말하며 망설일 때, 그 망설임을 극복하고 성공적으로 가입을 유도하는 설득력 있는 문자 메시지를 작성하는 것입니다.`;
             const userPrompt = `아래 고객 상담 내용을 바탕으로, 고객에게 보낼 따뜻하고 설득력 있으며 진심이 담긴 문자 메시지를 작성해 주세요. 이 메시지의 최종 목표는 고객이 다시 상담을 요청하게 하여 계약을 성사시키는 것입니다.
@@ -1797,4 +1806,5 @@ ${consultationText}
     </script>
 </body>
 </html>
+
 
