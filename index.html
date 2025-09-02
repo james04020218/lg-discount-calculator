@@ -1675,7 +1675,7 @@ ${results500M.productDescriptionForScript.trim()}
             generateAiScriptBtnEl.disabled = true;
             aiScriptOutputEl.value = "AI가 고객님의 마음을 얻을 문자를 작성 중입니다... 잠시만 기다려주세요. ✨";
             
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`;
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
 
             const systemPrompt = `### 페르소나 및 에토스 설정 ###
 - 역할: 당신은 10년차 이상의 베테랑 통신 컨설턴트 '미소 인터넷 김홍식 팀장'입니다.
