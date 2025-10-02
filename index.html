@@ -407,39 +407,6 @@
             </div>
         </section>
 
-        <section id="expertScriptSection" class="hidden mt-12">
-            <h2 class="section-title">전문가용 상담 스크립트</h2>
-            <div class="result-card">
-                <h3 class="text-xl font-semibold text-pink-600 mb-3">1. 1년 vs 3년 약정 최종 비용(TCO) 비교</h3>
-                <div class="flex space-x-4 mb-4">
-                    <button id="generateTco100m" class="btn-primary text-sm flex-1">100Mbps 비교 스크립트 생성</button>
-                    <button id="generateTco500m" class="btn-secondary text-sm flex-1">500Mbps 비교 스크립트 생성</button>
-                </div>
-                <textarea id="tcoScript" class="message-script-area" readonly></textarea>
-                <div class="copy-button-container">
-                    <button onclick="copyToClipboard('tcoScript', 'copyFeedbackTco')" class="btn-secondary text-xs">복사하기</button>
-                    <span id="copyFeedbackTco" class="copy-feedback"></span>
-                </div>
-            </div>
-             <div class="result-card">
-                <h3 class="text-xl font-semibold text-pink-600 mb-3">2. LGU+ 위약금 산정 방식 상세 분석</h3>
-                <button id="generatePenaltyScript" class="btn-primary text-sm w-full mb-4">분석 스크립트 생성</button>
-                <textarea id="penaltyScript" class="message-script-area" readonly></textarea>
-                <div class="copy-button-container">
-                    <button onclick="copyToClipboard('penaltyScript', 'copyFeedbackPenalty')" class="btn-secondary text-xs">복사하기</button>
-                    <span id="copyFeedbackPenalty" class="copy-feedback"></span>
-                </div>
-            </div>
-             <div class="result-card">
-                <h3 class="text-xl font-semibold text-pink-600 mb-3">3. 위약금 면제 조건 총정리</h3>
-                <button id="generateWaiverScript" class="btn-primary text-sm w-full mb-4">안내 스크립트 생성</button>
-                <textarea id="waiverScript" class="message-script-area" readonly></textarea>
-                <div class="copy-button-container">
-                    <button onclick="copyToClipboard('waiverScript', 'copyFeedbackWaiver')" class="btn-secondary text-xs">복사하기</button>
-                    <span id="copyFeedbackWaiver" class="copy-feedback"></span>
-                </div>
-            </div>
-        </section>
 
         <section id="commissionSection" class="mb-8">
             <h2 class="section-title">3. 수수료 정책 선택 (OTT상품용)</h2>
@@ -606,6 +573,41 @@
                 <div class="copy-button-container">
                     <button onclick="copyToClipboard('mvnoInfoScript', 'copyFeedbackMvnoInfo')" class="btn-secondary text-xs">복사하기</button>
                     <span id="copyFeedbackMvnoInfo" class="copy-feedback"></span>
+                </div>
+            </div>
+
+            <!-- Moved Expert Scripts Section -->
+            <div id="expertScriptSection" class="mt-4">
+                <h3 class="text-xl font-semibold text-pink-600 mb-3 border-t pt-4 mt-6">6. 전문가용 상담 스크립트</h3>
+                <div class="result-card">
+                    <h4 class="text-lg font-semibold text-pink-600 mb-3">1. 1년 vs 3년 약정 최종 비용(TCO) 비교</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <button id="generateTco100m" class="btn-primary text-sm flex-1">100Mbps 비교 스크립트 생성</button>
+                        <button id="generateTco500m" class="btn-secondary text-sm flex-1">500Mbps 비교 스크립트 생성</button>
+                    </div>
+                    <textarea id="tcoScript" class="message-script-area" readonly></textarea>
+                    <div class="copy-button-container">
+                        <button onclick="copyToClipboard('tcoScript', 'copyFeedbackTco')" class="btn-secondary text-xs">복사하기</button>
+                        <span id="copyFeedbackTco" class="copy-feedback"></span>
+                    </div>
+                </div>
+                 <div class="result-card">
+                    <h4 class="text-lg font-semibold text-pink-600 mb-3">2. LGU+ 위약금 산정 방식 상세 분석</h4>
+                    <button id="generatePenaltyScript" class="btn-primary text-sm w-full mb-4">분석 스크립트 생성</button>
+                    <textarea id="penaltyScript" class="message-script-area" readonly></textarea>
+                    <div class="copy-button-container">
+                        <button onclick="copyToClipboard('penaltyScript', 'copyFeedbackPenalty')" class="btn-secondary text-xs">복사하기</button>
+                        <span id="copyFeedbackPenalty" class="copy-feedback"></span>
+                    </div>
+                </div>
+                 <div class="result-card">
+                    <h4 class="text-lg font-semibold text-pink-600 mb-3">3. 위약금 면제 조건 총정리</h4>
+                    <button id="generateWaiverScript" class="btn-primary text-sm w-full mb-4">안내 스크립트 생성</button>
+                    <textarea id="waiverScript" class="message-script-area" readonly></textarea>
+                    <div class="copy-button-container">
+                        <button onclick="copyToClipboard('waiverScript', 'copyFeedbackWaiver')" class="btn-secondary text-xs">복사하기</button>
+                        <span id="copyFeedbackWaiver" class="copy-feedback"></span>
+                    </div>
                 </div>
             </div>
         </section>
