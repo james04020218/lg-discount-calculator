@@ -150,7 +150,7 @@
         <section id="inputSection" class="mb-8">
             <div class="info-box">
                 <p class="font-semibold text-amber-700">⚠️ 민감정보</p>
-                <p><a href="https://waiting.kr/booking/forms/secure-details?querystring=고객님 전화번호" target="_blank">https://waiting.kr/booking/forms/secure-details?querystring=고객님 전화번호</a></p>
+                <p><a href="https://lg-sensitiveinfo.com/" target="_blank">https://lg-sensitiveinfo.com/</a></p>
                 <p class="text-sm">ㄴ> 위 링크를 고객에게 문자로 전송해주세요. (아래 스크립트 복사 기능 이용)</p>
                 <hr class="my-2 border-yellow-300">
                 <p><strong>참고 스프레드시트:</strong> <a href="https://docs.google.com/spreadsheets/d/10d21RrhIPBiJr7RZIHnk0h1dB4GvTEcHCuXSyFYw1M4/edit?gid=0#gid=0" target="_blank">바로가기</a></p>
@@ -403,6 +403,40 @@
                         <li>일반 LG U+ 휴대폰과 함께 결합 가능 ('참쉬운 가족결합' 내에서 할인 적용)</li>
                         <li><strong>알뜰폰 결합 진행 시, 꼭 LG 고객센터를 통해 결합 가능한 요금제인지 고객님이 직접 확인 후 변경이 필요합니다.</strong></li>
                     </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="expertScriptSection" class="hidden mt-12">
+            <h2 class="section-title">전문가용 상담 스크립트</h2>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-pink-600 mb-3">1. 1년 vs 3년 약정 최종 비용(TCO) 비교</h3>
+                <div class="flex space-x-4 mb-4">
+                    <button id="generateTco100m" class="btn-primary text-sm flex-1">100Mbps 비교 스크립트 생성</button>
+                    <button id="generateTco500m" class="btn-secondary text-sm flex-1">500Mbps 비교 스크립트 생성</button>
+                </div>
+                <textarea id="tcoScript" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('tcoScript', 'copyFeedbackTco')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackTco" class="copy-feedback"></span>
+                </div>
+            </div>
+             <div class="result-card">
+                <h3 class="text-xl font-semibold text-pink-600 mb-3">2. LGU+ 위약금 산정 방식 상세 분석</h3>
+                <button id="generatePenaltyScript" class="btn-primary text-sm w-full mb-4">분석 스크립트 생성</button>
+                <textarea id="penaltyScript" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('penaltyScript', 'copyFeedbackPenalty')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackPenalty" class="copy-feedback"></span>
+                </div>
+            </div>
+             <div class="result-card">
+                <h3 class="text-xl font-semibold text-pink-600 mb-3">3. 위약금 면제 조건 총정리</h3>
+                <button id="generateWaiverScript" class="btn-primary text-sm w-full mb-4">안내 스크립트 생성</button>
+                <textarea id="waiverScript" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('waiverScript', 'copyFeedbackWaiver')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackWaiver" class="copy-feedback"></span>
                 </div>
             </div>
         </section>
@@ -766,6 +800,18 @@
             }
         };
 
+        const tcoData = {
+            "100M": { "lgu": { "name": "LGU+", "oneYearFee": 34100, "oneYearTCO13": 443300, "oneYearTCO18": 613800, "threeYearFee": 16500, "threeYearGift": 200000, "threeYearTCO13": 189552, "threeYearTCO18": 323077 } },
+            "500M": { "lgu": { "name": "LGU+", "oneYearFee": 46200, "oneYearTCO13": 600600, "oneYearTCO18": 831600, "threeYearFee": 23100, "threeYearGift": 230000, "threeYearTCO13": 358000, "threeYearTCO18": 542800 } }
+        };
+
+        const penaltyAnalysisData = {
+            text: `LGU+ 위약금 상세 분석\n\n■ LGU+ 위약금 산정 방식 (신규 체계)\nLG유플러스는 KT와 달리 구간별로 정해진 '할인반환율'을 적용하여 월별 위약금을 계산한 뒤, 이를 모두 합산하는 누적 방식을 사용합니다.\n\n■ 할인반환금 공식\n∑ (월할인액 × 해당구간개월수 × 구간별할인반환율)\n\n■ 구간별 할인반환율 (3년 약정, TV프리미엄+500M 기준)\n- 기본 월 할인액: ₩20,900\n- 1~9개월: 85%\n- 10~12개월: 80%\n- 13~18개월: 30%\n- 19~21개월: 25%\n- 22~24개월: 0%\n\n■ 시나리오 모델링 (신규 체계 공식 적용)\n1) 13개월 사용 후 해지:\n- 1~9개월분: ₩20,900 × 9개월 × 0.85 = ₩159,885\n- 10~12개월분: ₩20,900 × 3개월 × 0.80 = ₩50,160\n- 13개월차분: ₩20,900 × 1개월 × 0.30 = ₩6,270\n- 최종 위약금: ₩216,315\n\n2) 18개월 사용 후 해지:\n- 1~12개월분 합계: ₩210,045\n- 13~18개월분: ₩20,900 × 6개월 × 0.30 = ₩37,620\n- 최종 위약금: ₩247,665\n\n3) 24개월 사용 후 해지:\n- 1~18개월분 합계: ₩247,665\n- 19~21개월분: ₩20,900 × 3개월 × 0.25 = ₩15,675\n- 22~24개월분: ₩20,900 × 3개월 × 0.00 = ₩0\n- 최종 위약금: ₩263,340`
+        };
+
+        const waiverConditionsData = {
+            text: `[상세 안내] 위약금 면제 조건 총정리\n\n안녕하세요 고객님, 3년 약정 부담을 덜어드리기 위해 약정 기간 중 피치 못할 사정으로 해지하시더라도 위약금(할인반환금)이 면제되는 공식적인 경우를 안내해 드립니다.\n\n■ 위약금 면제 가능 주요 사유\n1. 설치 장소의 서비스 불가\n   - 이사 간 곳이 U+ 인터넷 서비스가 불가능한 지역인 경우 (증빙서류 필요)\n2. 가입자 사망\n   - 명의자 사망 시 (증빙서류 필요)\n3. 군 입대\n   - 명의자가 현역으로 입대하는 경우 (입영통지서 등 증빙서류 필요)\n\n■ 참고사항\n- 위 조건에 해당하더라도 증빙서류 제출이 필수적입니다.\n- 자세한 기준과 필요 서류는 상황에 따라 달라질 수 있으므로, 해지 시점에 U+ 고객센터(101번)를 통해 반드시 최종 확인이 필요합니다.\n\n이처럼 부득이한 경우에는 '안전장치'가 마련되어 있으니, 너무 걱정하지 않으셔도 괜찮습니다.`
+        };
 
         // --- DOM Element References ---
         const vatToggle = document.getElementById('vatToggle');
@@ -839,6 +885,16 @@
         const completeScriptEl = document.getElementById('completeScript');
         const sensitiveInfoLinkScriptEl = document.getElementById('sensitiveInfoLinkScript');
         const mvnoInfoScriptEl = document.getElementById('mvnoInfoScript');
+
+        // Expert Script Elements
+        const expertScriptSectionEl = document.getElementById('expertScriptSection');
+        const generateTco100mBtn = document.getElementById('generateTco100m');
+        const generateTco500mBtn = document.getElementById('generateTco500m');
+        const tcoScriptEl = document.getElementById('tcoScript');
+        const generatePenaltyBtn = document.getElementById('generatePenaltyScript');
+        const penaltyScriptEl = document.getElementById('penaltyScript');
+        const generateWaiverBtn = document.getElementById('generateWaiverScript');
+        const waiverScriptEl = document.getElementById('waiverScript');
 
         const allDetailSectionsLGU = [
             { radioValue: 'cham_family', toggleEl: chamFamilyDetailsToggleEl, containerEl: chamFamilyDetailsContainerEl, updateFn: updateChamFamilyDetails },
@@ -1222,10 +1278,15 @@
 
         function populateCommissionPolicies() {
             commissionPolicyEl.innerHTML = '<option value="none">선택 안함</option>';
-            commissionDataLG.internet_tv.commission_rules.forEach((rule, index) => {
+            // Create a set of unique commission values from the rules
+            const uniqueCommissions = [...new Set(commissionDataLG.internet_tv.commission_rules.map(rule => rule.commission))];
+            // Sort the unique values in descending order for a better user experience
+            uniqueCommissions.sort((a, b) => b - a);
+            // Populate the dropdown with the unique, sorted commission values
+            uniqueCommissions.forEach(commission => {
                 const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `수수료 ${rule.commission.toLocaleString()}원`;
+                option.value = commission;
+                option.textContent = `수수료 ${commission.toLocaleString()}원`;
                 commissionPolicyEl.appendChild(option);
             });
         }
@@ -1264,6 +1325,12 @@
             resetButton.addEventListener('click', resetCalculator);
             generateComparisonButton.addEventListener('click', generateComparisonScript);
             
+            // Expert script button listeners
+            generateTco100mBtn.addEventListener('click', () => generateTCOComparisonScript('100M'));
+            generateTco500mBtn.addEventListener('click', () => generateTCOComparisonScript('500M'));
+            generatePenaltyBtn.addEventListener('click', generatePenaltyAnalysisScript);
+            generateWaiverBtn.addEventListener('click', generateWaiverScript);
+
             discountTypeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'together_bundle' && internetPlanEl.value === '100M') {
@@ -1400,8 +1467,19 @@
             let giftCashAmount = 0;
             if (internetKey !== 'none') {
                 const isOttPlan = currentInternetDetails.isOttPlan;
-                if (isOttPlan && commissionPolicyIndex !== 'none') {
-                    const rule = commissionDataLG.internet_tv.commission_rules[commissionPolicyIndex];
+                const selectedCommissionValue = parseInt(commissionPolicyEl.value, 10);
+
+                if (isOttPlan && !isNaN(selectedCommissionValue)) {
+                    // Determine TV plan tier ('premium' or 'basic')
+                    const tvPlanKey = tvPlanEl.value;
+                    const tvPlanDetails = tvPlanKey !== 'none' ? lguData.tv_plans[tvPlanKey] : null;
+                    const tvTier = (tvPlanDetails && tvPlanDetails.category === '베이직') ? 'basic' : 'premium';
+
+                    // Find the matching commission rule
+                    const rule = commissionDataLG.internet_tv.commission_rules.find(r =>
+                        r.commission === selectedCommissionValue && r.plan_tier === tvTier
+                    );
+
                     if (rule) {
                         giftCashAmount = rule.support_money_max || 0;
                     }
@@ -1503,6 +1581,7 @@
             
             resultSection.classList.remove('hidden');
             messageScriptSectionEl.classList.remove('hidden');
+            expertScriptSectionEl.classList.remove('hidden');
             
             generateMessageScriptsLGU(); 
         }
@@ -1630,9 +1709,50 @@ ${memoAdditions}`;
         
             completeScriptEl.value = `[웨이팅 인터넷 통합접수센터] U+ 가입 완료 안내\n안녕하세요, 고객님. 웨이팅 인터넷 통합접수센터 U+입니다.\n✅ 계약이 완료되었어요, 아래 내용은 계약서와 동일한 효력이 있으니 꼼꼼히 읽어주세요.\n⚠️ 3년 약정이며, 아래와 같은 상황에 해당하면 받으셨던 사은품은 환수 됩니다.\n① 1년 이내 해지/정지/명의변경\n② 요금 미납 및 사용정지\n③ 요금제 하향 (상향 시에는 환수 되지 않습니다!)\n④ 개통 1개월 이내 결제수단 지로청구서로 변경\n⚠️ 신규 가입 후 기존에 사용하시던 타사 인터넷/TV는 꼭 직접 해지 해주세요. 자동해지되지 않으며 이럴 경우 요금이 이중 부과되어요.\n⚠️ 3년 이내 해지 시 통신사 본사에 위약금 (할인 반환금) 및 면제된 설치비/장비임대료 등이 반환될 수 있어요.\n✅ 가입 상품 안내\n${completeProductDescription}${completeDiscountLine}\n▶️ 월 ${formatPrice(results.finalWiredMonthlyCost)}원 (유선상품, 3년 약정, ${vatText})\n▶️ 설치비 ${formatPrice(results.calculatedInstallationFee)}원 첫 달 합산 청구\n▶️ 현금 사은품 ${results.giftCashAmount.toLocaleString()}원\n✅사은품은 설치 후 평일 기준 익주 금요일까지 지급됩니다. (설치 후 연락 필수)\n${finalGuidance}\n웨이팅 인터넷 통합접수센터 드림.`;
         
-            sensitiveInfoLinkScriptEl.value = `[LG] 아래 링크에 고객님의 민감정보를 입력하시면 LG로 고객님의 민감정보가 직접 전송후 접수 됩니다.\n\nhttps://waiting.kr/booking/forms/secure-details?querystring=고객님 전화번호\n\n입력후 접수 완료 라고 문자 주시면 담당 상담원이 접수 확인후 필수 안내사항 안내 드리겠습니다.`;
+            sensitiveInfoLinkScriptEl.value = `[LG] 아래 링크에 고객님의 민감정보를 입력하시면 LG로 고객님의 민감정보가 직접 전송후 접수 됩니다.\n\nhttps://lg-sensitiveinfo.com/\n\n입력후 접수 완료 라고 문자 주시면 담당 상담원이 접수 확인후 필수 안내사항 안내 드리겠습니다.`;
         
             mvnoInfoScriptEl.value = 'U+알뜰모바일 인터넷 결합 요금제 정보: https://www.uplusmvno.com/plan/plan-list';
+        }
+
+        function generateTCOComparisonScript(speed) {
+            const data = tcoData[speed]?.lgu;
+            if (!data) {
+                tcoScriptEl.value = `${speed} 속도에 대한 TCO 데이터가 없습니다.`;
+                return;
+            }
+
+            const savings13 = data.oneYearTCO13 - data.threeYearTCO13;
+            const savings18 = data.oneYearTCO18 - data.threeYearTCO18;
+
+            tcoScriptEl.value = `1년 vs 3년 약정 총비용(TCO) 비교 (${speed})
+
+"고객님, 약정 기간이 부담되시는 마음 충분히 이해합니다.
+그래서 공식 약관 기준으로 실제 총비용을 비교한 자료를 보내드렸습니다.
+놀랍게도, 3년 약정은 1년(13개월)만 사용하고 해지해도 1년 약정보다 훨씬 저렴합니다."
+
+■ ${speed} 상품, 1년만 써도 3년 약정이 이득!
+- 13개월 사용 후 해지 시: 1년 약정보다 총 ${savings13.toLocaleString()}원 이득!
+- 18개월 사용 후 해지 시: 1년 약정보다 총 ${savings18.toLocaleString()}원 이득!
+
+아래는 위약금까지 모두 포함된 실제 총 부담 금액(TCO)입니다.
+
+| 구분        | 월 요금(VAT 포함) | 사은품   | 13개월 사용 시 총비용(TCO) | 18개월 사용 시 총비용(TCO) |
+|--------------|-------------------|----------|----------------------------|----------------------------|
+| 1년 약정     | ${data.oneYearFee.toLocaleString()}원        | -        | **${data.oneYearTCO13.toLocaleString()}원** | **${data.oneYearTCO18.toLocaleString()}원** |
+| 3년 약정     | ${data.threeYearFee.toLocaleString()}원        | ${data.threeYearGift.toLocaleString()}원 | **${data.threeYearTCO13.toLocaleString()}원** (👉${(savings13/10000).toFixed(1)}만원 이득) | **${data.threeYearTCO18.toLocaleString()}원** (👉${(savings18/10000).toFixed(1)}만원 이득) |
+
+*TCO(Total Cost of Ownership): 월 요금, 사은품, 해지 위약금 등 모든 비용을 종합하여 고객이 실제로 부담하는 총 소유 비용.
+
+[출처 안내]
+* LGU+: lguplus.com > 인터넷/IPTV > 할인반환금안내 (https://www.lguplus.com/internet-iptv/popup/PaybackPop)`;
+        }
+
+        function generatePenaltyAnalysisScript() {
+            penaltyScriptEl.value = penaltyAnalysisData.text;
+        }
+
+        function generateWaiverScript() {
+            waiverScriptEl.value = waiverConditionsData.text;
         }
 
         function getInstallationServiceString(hasInternet, hasFirstTv, hasPhone, hasAdditionalTv) {
